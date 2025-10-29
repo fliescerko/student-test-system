@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="fragments/header :: header('${title}')"></head>
+<body>
+<main class="container">
+    <h3 class="page-title" th:text="${title}"></h3>
+
+    <form th:action="@{/admin/students}" method="post" class="form-card">
+        <input type="hidden" th:field="${student.id}">
+
+        <div class="form-group">
+            <label for="studentNo">学号 <span class="required">*</span></label>
+            <input type="text" id="studentNo" th:field="${student.studentNo}"
+                   required maxlength="32">
+        </div>
+
+        <div class="form-group">
+            <label for="fullName">姓名 <span class="required">*</span></label>
+            <input type="text" id="fullName" th:field="${student.fullName}"
+                   required maxlength="64">
+        </div>
+
+        <div class="form-group">
+            <label for="className">班级</label>
+            <input type="text" id="className" th:field="${student.className}"
+                   maxlength="32">
+        </div>
+
+        <div class="form-group">
+            <label for="grade">年级</label>
+            <input type="text" id="grade" th:field="${student.grade}"
+                   maxlength="16">
+        </div>
+
+        <div class="form-actions">
+            <button type="submit" class="btn-primary">保存</button>
+            <a th:href="@{/admin/students}" class="btn-secondary">取消</a>
+        </div>
+    </form>
+</main>
+</body>
+</html>

@@ -1,0 +1,16 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="fragments/header :: header('选择导入方式')"></head>
+<body>
+<!--<header th:replace="fragments/header :: navbar"></header>-->
+
+<main class="container card center">
+    <h3 class="page-title">选择导入成绩的方式</h3>
+    <nav class="import-options">
+        <a th:href="@{/teacher/input-grade}" class="btn-primary">手动录入成绩</a>
+        <a th:href="@{/teacher/upload}" class="btn-secondary">上传 CSV 文件</a>
+    </nav>
+</main>
+
+</body>
+</html>

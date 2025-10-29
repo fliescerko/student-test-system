@@ -1,0 +1,366 @@
+/* ===============================
+   🌟 全局基础样式
+   =============================== */
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    font-family: "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+    background-color: #f5f7fb;
+    color: #2c3e50;
+    line-height: 1.6;
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 1rem;
+}
+
+/* ===============================
+   🧭 顶部导航栏
+   =============================== */
+.header-container {
+    background: linear-gradient(90deg, #1f3b73, #2c5282);
+    color: #fff;
+    padding: 1rem 2rem;
+    border-radius: 12px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin: 1.5rem 0;
+    position: relative;
+}
+
+.system-title {
+    display: flex;
+    align-items: center;
+    gap: 0.8rem;
+}
+
+.system-title i {
+    font-size: 1.6rem;
+    color: #ffd43b;
+}
+
+.system-title h1 {
+    font-size: 1.5rem;
+    font-weight: 600;
+    letter-spacing: 1px;
+}
+
+/* ===============================
+   🔗 导航菜单
+   =============================== */
+.main-nav {
+    display: flex;
+    gap: 1rem;
+    align-items: center;
+    flex-wrap: wrap;
+}
+
+.nav-link {
+    display: flex;
+    align-items: center;
+    gap: 0.4rem;
+    text-decoration: none;
+    color: #e2e8f0;
+    padding: 0.6rem 1.2rem;
+    border-radius: 6px;
+    font-size: 0.95rem;
+    transition: all 0.3s ease;
+}
+
+.nav-link:hover {
+    background-color: rgba(255, 255, 255, 0.15);
+    color: #fff;
+    transform: translateY(-2px);
+}
+
+/* 退出登录按钮 */
+.nav-link.logout {
+    background: linear-gradient(90deg, #e53e3e, #c53030);
+    font-weight: 600;
+}
+
+.nav-link.logout:hover {
+    background: linear-gradient(90deg, #c53030, #9b2c2c);
+}
+
+/* ===============================
+   🏠 欢迎区块
+   =============================== */
+.welcome-section {
+    background: white;
+    border-radius: 12px;
+    padding: 2rem;
+    box-shadow: 0 3px 10px rgba(0, 0, 0, 0.05);
+    margin-bottom: 2rem;
+    animation: fadeIn 0.5s ease-in-out;
+}
+
+.welcome-section h2 {
+    color: #1f3b73;
+    margin-bottom: 1rem;
+    font-size: 1.6rem;
+    border-left: 5px solid #2c5282;
+    padding-left: 0.8rem;
+}
+
+/* ===============================
+   👤 用户信息区
+   =============================== */
+.user-info {
+    background: #f9fafc;
+    border-left: 4px solid #2c5282;
+    padding: 1rem 1.2rem;
+    border-radius: 6px;
+    margin-bottom: 1.5rem;
+}
+
+.user-info h3 {
+    font-weight: 600;
+    color: #2d3748;
+    margin-bottom: 0.5rem;
+}
+
+.user-info p {
+    margin: 0.3rem 0;
+    color: #4a5568;
+}
+
+/* ===============================
+   🧑‍🏫 功能卡片区
+   =============================== */
+.role-features h4 {
+    color: #2c5282;
+    margin-bottom: 1rem;
+}
+
+.feature-cards {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1.5rem;
+}
+
+.card {
+    background: #ffffff;
+    border-radius: 10px;
+    padding: 1.5rem;
+    flex: 1 1 280px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+    transition: all 0.3s ease;
+    border: 1px solid #edf2f7;
+}
+
+.card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 6px 14px rgba(44, 82, 130, 0.2);
+}
+
+.card h5 {
+    color: #1f3b73;
+    margin-bottom: 0.5rem;
+}
+
+.card p {
+    color: #4a5568;
+    margin-bottom: 1rem;
+    font-size: 0.95rem;
+}
+
+.card .btn {
+    display: inline-block;
+    background: linear-gradient(90deg, #3182ce, #2b6cb0);
+    color: white;
+    padding: 0.6rem 1.2rem;
+    border-radius: 6px;
+    text-decoration: none;
+    transition: background 0.3s ease;
+}
+
+.card .btn:hover {
+    background: linear-gradient(90deg, #2b6cb0, #2c5282);
+}
+
+/* ===============================
+   📑 表格样式
+   =============================== */
+table {
+    width: 100%;
+    border-collapse: collapse;
+    background: #fff;
+    border-radius: 10px;
+    overflow: hidden;
+    margin: 1.5rem 0;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+}
+
+th, td {
+    padding: 1rem;
+    text-align: left;
+    border-bottom: 1px solid #edf2f7;
+}
+
+th {
+    background-color: #e9eff7;
+    color: #2c5282;
+    font-weight: 600;
+}
+
+tr:hover {
+    background-color: #f7fafc;
+}
+
+/* ===============================
+   ✅ 消息提示
+   =============================== */
+.message {
+    padding: 1rem;
+    border-radius: 6px;
+    margin: 1rem 0;
+    font-weight: 500;
+}
+
+.success {
+    background-color: #e6fffa;
+    color: #2c7a7b;
+    border: 1px solid #81e6d9;
+}
+
+.error {
+    background-color: #fff5f5;
+    color: #c53030;
+    border: 1px solid #feb2b2;
+}
+
+/* ===============================
+   📱 响应式调整
+   =============================== */
+@media (max-width: 768px) {
+    .header-container {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 1rem;
+    }
+
+    .main-nav {
+        width: 100%;
+        justify-content: flex-start;
+        flex-wrap: wrap;
+    }
+
+    .nav-link.logout {
+        width: 100%;
+        text-align: center;
+        justify-content: center;
+    }
+
+    .feature-cards {
+        flex-direction: column;
+    }
+
+    table {
+        font-size: 0.9rem;
+    }
+
+    th, td {
+        padding: 0.7rem;
+    }
+}
+
+/* ===============================
+   ✨ 动画效果
+   =============================== */
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(15px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+/* ===============================
+   🧩 页面通用增强样式
+   =============================== */
+.container {
+    max-width: 800px;
+    margin: 2rem auto;
+    padding: 1rem;
+}
+
+.page-title {
+    color: #1f3b73;
+    margin-bottom: 1.5rem;
+    border-left: 5px solid #2b6cb0;
+    padding-left: 0.8rem;
+}
+
+/* 卡片外观 */
+.card {
+    background: #fff;
+    border-radius: 12px;
+    padding: 2rem;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+    margin-bottom: 1.5rem;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+.card:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 6px 16px rgba(31, 59, 115, 0.15);
+}
+
+/* 表单按钮与链接 */
+.btn-primary {
+    background: linear-gradient(90deg, #3182ce, #2b6cb0);
+    color: white;
+    padding: 0.6rem 1.4rem;
+    border: none;
+    border-radius: 6px;
+    font-size: 1rem;
+    cursor: pointer;
+    text-decoration: none;
+    transition: background 0.3s ease;
+}
+.btn-primary:hover {
+    background: linear-gradient(90deg, #2b6cb0, #1f3b73);
+}
+
+.btn-secondary {
+    background: #718096;
+    color: white;
+    padding: 0.6rem 1.4rem;
+    border-radius: 6px;
+    text-decoration: none;
+    transition: background 0.3s ease;
+}
+.btn-secondary:hover {
+    background: #4a5568;
+}
+
+.btn-link {
+    color: #2b6cb0;
+    text-decoration: none;
+    font-weight: 500;
+}
+.btn-link:hover {
+    text-decoration: underline;
+}
+
+.link-back {
+    color: #2b6cb0;
+    text-decoration: none;
+}
+.link-back:hover {
+    text-decoration: underline;
+}
+
+/* 中心布局 */
+.center {
+    text-align: center;
+}
+
+

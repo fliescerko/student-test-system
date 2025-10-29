@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/header :: header('录入学生成绩')}"></head>
+<style>
+
+
+    /* 额外信息提示 */
+    .message.info {
+        background-color: #ebf8ff;
+        color: #2b6cb0;
+        border: 1px solid #bee3f8;
+    }
+
+    .import-options {
+        display: flex;
+        justify-content: center;
+        gap: 2rem;
+        margin-top: 2rem;
+    }
+
+    .mt-3 {
+        margin-top: 1.5rem;
+    }
+    .filter-form {
+        background-color: #fff;
+        border-radius: 12px;
+        box-shadow: 0 2px 6px rgba(0, 0, 0, 0.08);
+    }
+
+    .form-select {
+        width: 220px;
+        height: 42px;
+        border: 1px solid #ced4da;
+        transition: border-color 0.3s, box-shadow 0.3s;
+    }
+
+    .form-select:focus {
+        border-color: #0d6efd;
+        box-shadow: 0 0 4px rgba(13, 110, 253, 0.3);
+    }
+
+    .btn-primary {
+        height: 42px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-weight: 500;
+    }
+    .form-select {
+        width: 240px;
+        height: 44px;
+        padding: 8px 12px;
+        border: 1px solid #d0d7de;
+        border-radius: 8px;
+        background-color: #f8f9fa;
+        color: #333;
+        font-size: 15px;
+        transition: all 0.25s ease;
+        appearance: none; /* 隐藏系统默认箭头 */
+        background-image: linear-gradient(to bottom, #ffffff, #f1f3f5),
+        url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8'%3E%3Cpath fill='none' stroke='%23666' stroke-width='1.5' d='M1 1l5 5 5-5'/%3E%3C/svg%3E");
+        background-repeat: no-repeat, no-repeat;
+        background-position: right 12px center, right 12px center;
+        background-size: 12px 8px, 12px 8px;
+    }
+
+    .form-select:hover {
+        background-color: #eef3ff;
+        border-color: #a3bffa;
+    }
+
+    .form-select:focus {
+        outline: none;
+        border-color: #0d6efd;
+        box-shadow: 0 0 6px rgba(13, 110, 253, 0.3);
+        background-color: #fff;
+    }
+
+    /* 下拉项优化 */
+    .form-select option {
+        padding: 10px;
+        font-size: 15px;
+        background-color: #fff;
+        color: #333;
+    }
+
+    /* 点击按钮也配合整体风格 */
+    .btn-primary {
+        height: 44px;
+        padding: 0 20px;
+        border-radius: 8px;
+        background: linear-gradient(135deg, #0d6efd, #3a86ff);
+        border: none;
+        color: #fff;
+        font-weight: 500;
+        transition: all 0.3s ease;
+    }
+
+    .btn-primary:hover {
+        background: linear-gradient(135deg, #0b5ed7, #2563eb);
+        box-shadow: 0 4px 10px rgba(13, 110, 253, 0.3);
+    }
+
+</style>
+<body>
+<main class="container">
+    <h3 class="page-title">录入学生成绩</h3>
+
+    <!-- 课程筛选（修改后） -->
+    <form th:action="@{/teacher/input-grade}" method="get" class="filter-form card p-3 d-flex align-items-center gap-3">
+        <div class="form-group d-flex align-items-center mb-0">
+            <label for="courseId" class="me-2 fw-semibold">选择课程：</label>
+            <select id="courseId" name="courseId" required class="form-select shadow-sm rounded">
+                <option value="">-- 请选择课程 --</option>
+                <option th:each="course : ${courses}"
+                        th:value="${course.id}"
+                        th:text="${course.name}"
+                        th:selected="${selectedCourse != null and course.id == selectedCourse.id}">
+                </option>
+            </select>
+        </div>
+        <button type="submit" class="btn btn-primary px-4 shadow-sm">查看学生成绩</button>
+    </form>
+
+
+    <!-- 成绩录入区 -->
+    <div th:if="${selectedCourse != null}" class="card mt-3">
+        <h4 th:text="${'课程：' + selectedCourse.name + ' — 学生成绩录入'}"></h4>
+
+        <div th:if="${msg}" class="message success" th:text="${msg}"></div>
+
+        <form th:action="@{/teacher/update-grades}" method="post" class="grade-form">
+            <input type="hidden" name="courseId" th:value="${selectedCourse.id}">
+
+            <div class="table-wrapper">
+                <table class="data-table">
+                    <thead>
+                    <tr>
+                        <th>学生姓名</th>
+                        <th>学号</th>
+                        <th th:each="item : ${gradeItems}" th:text="${item.name + ' (' + item.weight + '%)'}"></th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <!-- 外层循环学生 -->
+                    <tr th:each="student, studentStat : ${students}">
+                        <td th:text="${student.fullName}"></td>
+                        <td th:text="${student.studentNo}"></td>
+
+                        <!-- 内层循环评分项 -->
+                        <td th:each="item, itemStat : ${gradeItems}">
+                            <!-- 修复：不能嵌套${} -->
+                            <th:block th:with="flatIndex=${studentStat.index * gradeItems.size() + itemStat.index}">
+                                <input type="number"
+                                       th:name="${'grades[' + flatIndex + '].score'}"
+                                       min="0" max="100" step="0.5"
+                                       th:value="${gradeMap[student.id + '_' + item.id]?.score ?: ''}">
+                                <input type="hidden"
+                                       th:name="${'grades[' + flatIndex + '].studentId'}"
+                                       th:value="${student.id}">
+                                <input type="hidden"
+                                       th:name="${'grades[' + flatIndex + '].gradeItemId'}"
+                                       th:value="${item.id}">
+                            </th:block>
+                        </td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <div class="form-actions mt-3">
+                <button type="submit" class="btn-primary">保存所有成绩</button>
+            </div>
+        </form>
+    </div>
+
+    <div th:if="${selectedCourse == null}" class="message info">
+        请选择课程后查看并录入成绩。
+    </div>
+
+    <p class="mt-3">
+        <a th:href="@{/teacher/select-import-method}" class="link-back">返回导入方式选择</a>
+    </p>
+</main>
+</body>
+</html>

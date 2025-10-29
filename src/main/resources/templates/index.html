@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="fragments/header :: header('学生成绩系统')"></head>
+<body>
+
+<div class="welcome-section">
+  <h2>欢迎使用学生成绩系统</h2>
+
+  <div th:if="${user != null}" class="user-info">
+    <h3>欢迎您，<span th:text="${user.username}"></span></h3>
+    <p>角色：<span th:text="${userRole}"></span></p>
+    <p>邮箱：<span th:text="${userEmail}"></span></p>
+  </div>
+
+  <!-- 管理员功能区 -->
+  <div th:if="${userRole == 'ADMIN'}" class="role-features">
+    <h4>管理员功能</h4>
+    <div class="feature-cards">
+      <div class="card">
+        <h5>学生管理</h5>
+        <p>添加、修改或删除学生基本信息</p>
+        <a th:href="@{/admin/students}" class="btn">
+          <i class="fa fa-users"></i> 进入学生管理
+        </a>
+      </div>
+      <!-- 可以在这里添加更多管理员功能卡片 -->
+      <div class="card">
+        <h5>系统设置</h5>
+        <p>管理用户角色与系统参数配置</p>
+        <a th:href="@{/admin/settings}" class="btn">
+          <i class="fa fa-cog"></i> 系统设置
+        </a>
+      </div>
+    </div>
+  </div>
+
+  <!-- 教师功能区 -->
+  <div th:if="${userRole == 'TEACHER'}" class="role-features">
+    <h4>教师功能</h4>
+    <div class="feature-cards">
+      <div class="card">
+        <h5>成绩管理</h5>
+        <p>手动录入或批量导入学生成绩</p>
+        <a th:href="@{/teacher/select-import-method}" class="btn">进入成绩管理</a>
+      </div>
+      <div class="card">
+        <h5>查看权限设置</h5>
+        <p>设置学生可查看成绩的时间范围</p>
+        <a th:href="@{/teacher/course-settings}" class="btn">设置查看权限</a>
+      </div>
+    </div>
+  </div>
+
+  <!-- 学生功能区 -->
+  <div th:if="${userRole == 'STUDENT'}" class="role-features">
+    <h4>学生功能</h4>
+    <div class="feature-cards">
+      <div class="card">
+        <h5>我的成绩</h5>
+        <p>查看各学期课程成绩和明细</p>
+        <a th:href="@{/student/grades(term='2025秋')}" class="btn">查看成绩</a>
+      </div>
+    </div>
+  </div>
+
+  <div th:if="${user == null}">
+    <p>请<a th:href="@{/login}">登录</a>以使用系统功能</p>
+  </div>
+</div>
+
+<footer>
+  <p>© 2025 学生成绩系统 | 由系统管理团队维护</p>
+</footer>
+</body>
+</html>

@@ -1,0 +1,291 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/header :: header('CSV 成绩导入')}"></head>
+
+<style>
+    /* ===== 通用样式 ===== */
+    body {
+        background-color: #f5f7fa;
+        font-family: "Microsoft YaHei", sans-serif;
+        color: #333;
+        margin: 0;
+        padding: 0;
+    }
+
+    .container {
+        max-width: 720px;
+        margin: 60px auto;
+        padding: 0 20px;
+    }
+
+    /* ===== 卡片样式 ===== */
+    .upload-card {
+        background: #fff;
+        border-radius: 16px;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+        padding: 40px 50px;
+        transition: box-shadow 0.3s ease;
+    }
+
+    .upload-card:hover {
+        box-shadow: 0 6px 16px rgba(0, 0, 0, 0.12);
+    }
+
+    /* ===== 标题样式 ===== */
+    .page-title {
+        font-size: 1.6rem;
+        font-weight: 600;
+        margin-bottom: 20px;
+        color: #0d6efd;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+    }
+
+    .page-title i {
+        color: #0d6efd;
+    }
+
+    /* ===== 提示信息 ===== */
+    .alert {
+        border-radius: 8px;
+        padding: 12px 16px;
+        margin-bottom: 20px;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        font-size: 0.95rem;
+    }
+
+    .alert.success {
+        background-color: #e9f9f0;
+        color: #198754;
+        border-left: 4px solid #198754;
+    }
+
+    .alert.error {
+        background-color: #fdecea;
+        color: #dc3545;
+        border-left: 4px solid #dc3545;
+    }
+
+    /* ===== 上传提示 ===== */
+    .upload-hint {
+        background-color: #f8f9fa;
+        border-radius: 8px;
+        padding: 16px 20px;
+        margin-bottom: 24px;
+        border-left: 4px solid #0d6efd;
+    }
+
+    .upload-hint p {
+        font-weight: 600;
+        color: #0d6efd;
+        margin-bottom: 8px;
+    }
+
+    .upload-hint ul {
+        margin: 0;
+        padding-left: 20px;
+    }
+
+    .upload-hint li {
+        margin-bottom: 6px;
+    }
+
+    /* ===== 表单控件 ===== */
+    .form-group {
+        margin-bottom: 20px;
+    }
+
+    .form-group label {
+        display: block;
+        font-weight: 600;
+        margin-bottom: 6px;
+    }
+
+    .form-control {
+        width: 100%;
+        padding: 10px 12px;
+        border: 1px solid #ced4da;
+        border-radius: 8px;
+        transition: border-color 0.3s, box-shadow 0.3s;
+        font-size: 1rem;
+    }
+
+    .form-control:focus {
+        border-color: #0d6efd;
+        box-shadow: 0 0 6px rgba(13, 110, 253, 0.25);
+        outline: none;
+    }
+
+    /* ===== 按钮样式 ===== */
+    .btn {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        gap: 6px;
+        padding: 10px 18px;
+        font-size: 1rem;
+        font-weight: 500;
+        border: none;
+        border-radius: 8px;
+        cursor: pointer;
+        transition: background-color 0.25s, box-shadow 0.25s;
+    }
+
+    .btn-primary {
+        background-color: #0d6efd;
+        color: #fff;
+        box-shadow: 0 2px 6px rgba(13, 110, 253, 0.3);
+    }
+
+    .btn-primary:hover {
+        background-color: #0b5ed7;
+        box-shadow: 0 3px 10px rgba(13, 110, 253, 0.4);
+    }
+
+    .form-actions {
+        text-align: center;
+        margin-top: 24px;
+    }
+
+    /* ===== 返回链接 ===== */
+    .back-link {
+        text-align: center;
+        margin-top: 30px;
+    }
+
+    .back-link a {
+        color: #0d6efd;
+        font-weight: 500;
+        text-decoration: none;
+        transition: color 0.2s;
+    }
+
+    .back-link a:hover {
+        text-decoration: underline;
+        color: #0b5ed7;
+    }
+
+    /* ===== 页脚 ===== */
+    .footer {
+        text-align: center;
+        margin-top: 60px;
+        padding: 20px;
+        color: #777;
+        font-size: 0.9rem;
+    }
+
+    .footer p {
+        margin: 0;
+    }
+    /* ===== 文件选择器美化 ===== */
+    .file-upload-wrapper {
+        position: relative;
+        display: inline-block;
+        width: 100%;
+        max-width: 400px;
+    }
+
+    .file-upload-input {
+        position: absolute;
+        left: 0;
+        top: 0;
+        opacity: 0;
+        width: 100%;
+        height: 100%;
+        cursor: pointer;
+    }
+
+    .file-upload-label {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 8px;
+        background: linear-gradient(135deg, #0d6efd, #3a86ff);
+        color: #fff;
+        padding: 10px 20px;
+        border-radius: 8px;
+        font-weight: 500;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        box-shadow: 0 2px 6px rgba(13, 110, 253, 0.25);
+    }
+
+    .file-upload-label:hover {
+        background: linear-gradient(135deg, #0b5ed7, #2563eb);
+        box-shadow: 0 4px 10px rgba(13, 110, 253, 0.35);
+    }
+
+    .file-upload-name {
+        margin-top: 10px;
+        font-size: 0.95rem;
+        color: #555;
+        text-align: center;
+        font-style: italic;
+    }
+
+</style>
+
+<body>
+<main class="container">
+    <section class="card upload-card">
+        <h2 class="page-title"><i class="fa fa-upload"></i> CSV 成绩导入</h2>
+
+        <!-- 显示导入结果 -->
+        <div th:if="${msg}" class="alert success">
+            <i class="fa fa-check-circle"></i>
+            <span th:text="${msg}"></span>
+        </div>
+
+        <div th:if="${error}" class="alert error">
+            <i class="fa fa-exclamation-circle"></i>
+            <span th:text="${error}"></span>
+        </div>
+
+        <!-- 上传说明 -->
+        <div class="upload-hint">
+            <p><i class="fa fa-info-circle"></i> 上传说明：</p>
+            <ul>
+                <li>仅允许上传您负责教授的课程成绩。</li>
+                <li>CSV 文件必须包含以下列：<b>studentNo, courseCode, term, itemName, weight, score</b>。</li>
+                <li>系统会自动验证您是否有权限上传该课程的成绩。</li>
+            </ul>
+        </div>
+
+        <!-- 上传表单 -->
+        <form method="post" enctype="multipart/form-data" th:action="@{/teacher/upload}" class="upload-form">
+            <div class="form-group">
+                <label><i class="fa fa-file-text-o"></i> 选择 CSV 文件：</label>
+                <div class="file-upload-wrapper">
+                    <label for="file" class="file-upload-label">
+                        <i class="fa fa-folder-open"></i> 选择文件
+                    </label>
+                    <input type="file" id="file" name="file" accept=".csv" required class="file-upload-input"
+                           onchange="document.getElementById('fileName').textContent = this.files[0]?.name || '未选择文件';">
+                </div>
+                <div id="fileName" class="file-upload-name">未选择文件</div>
+            </div>
+
+
+            <div class="form-actions">
+                <button type="submit" class="btn btn-primary">
+                    <i class="fa fa-cloud-upload"></i> 上传并导入
+                </button>
+            </div>
+        </form>
+
+        <p class="back-link">
+            <a th:href="@{/teacher/select-import-method}">
+                <i class="fa fa-arrow-left"></i> 返回导入方式选择
+            </a>
+        </p>
+    </section>
+</main>
+
+<footer class="footer">
+    <p>© 2025 学生成绩管理系统 | 设计 by fliescerko</p>
+</footer>
+</body>
+</html>

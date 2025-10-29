@@ -1,0 +1,6 @@
+studentNo,courseCode,term,courseId,gradeItemId,itemName,weight,score
+20250001,CS101,2025-SPR,1,1,平时,40,85
+20250001,CS101,2025-SPR,1,2,期末,60,78
+20250002,CS101,2025-SPR,1,1,平时,40,90
+20250002,CS101,2025-SPR,1,2,期末,60,88
+

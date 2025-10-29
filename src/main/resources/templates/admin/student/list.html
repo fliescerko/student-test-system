@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="fragments/header :: header('学生管理')"></head>
+<body>
+<main class="container">
+    <h3 class="page-title">学生管理</h3>
+
+    <!-- 搜索框 -->
+    <form th:action="@{/admin/students}" method="get" class="search-form">
+        <input type="text" name="keyword" th:value="${keyword}"
+               placeholder="搜索姓名或学号">
+        <button type="submit" class="btn-secondary">搜索</button>
+        <a th:href="@{/admin/students/new}" class="btn-primary">新增学生</a>
+    </form>
+
+    <!-- 消息提示 -->
+    <div th:if="${msg}" class="message success" th:text="${msg}"></div>
+
+    <!-- 学生列表 -->
+    <div class="table-wrapper">
+        <table class="data-table">
+            <thead>
+            <tr>
+                <th>学号</th>
+                <th>姓名</th>
+                <th>班级</th>
+                <th>年级</th>
+                <th>操作</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:each="student : ${students}">
+                <td th:text="${student.studentNo}"></td>
+                <td th:text="${student.fullName}"></td>
+                <td th:text="${student.className}"></td>
+                <td th:text="${student.grade}"></td>
+                <td class="actions">
+                    <a th:href="@{/admin/students/edit/{id}(id=${student.id})}" class="btn-sm">编辑</a>
+                    <a th:href="@{/admin/students/delete/{id}(id=${student.id})}"
+                       class="btn-sm danger"
+                       onclick="return confirm('确定要删除吗？')">删除</a>
+                </td>
+            </tr>
+            <tr th:if="${#lists.isEmpty(students)}">
+                <td colspan="5" class="empty">暂无学生数据</td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+</main>
+</body>
+</html>
