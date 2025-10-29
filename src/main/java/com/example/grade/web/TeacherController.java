@@ -21,7 +21,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
-
+import org.springframework.http.MediaType;
 import java.security.Principal;
 import java.time.LocalDateTime;
 import java.util.HashMap;
@@ -248,4 +248,44 @@ public class TeacherController {
         redirect.addFlashAttribute("msg", message);
         return "redirect:/teacher/course-settings?courseId=" + courseId;
     }
+    @PostMapping(value = "/upload-excel", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    public String handleUploadExcel(@RequestParam("file") MultipartFile file,
+                                    Principal principal,
+                                    RedirectAttributes redirect) {
+        if (file.isEmpty()) {
+            redirect.addFlashAttribute("error", "请选择要上传的 Excel 文件");
+            return "redirect:/teacher/upload";
+        }
+
+        // 基于后缀与 content-type 的双重校验
+        String name = file.getOriginalFilename() == null ? "" : file.getOriginalFilename().toLowerCase();
+        String ct = file.getContentType() == null ? "" : file.getContentType();
+
+        boolean isExcel = name.endsWith(".xlsx") || name.endsWith(".xls")
+                || ct.equals("application/vnd.openxmlformats-officedocument.spreadsheetml.sheet")
+                || ct.equals("application/vnd.ms-excel");
+
+        if (!isExcel) {
+            redirect.addFlashAttribute("error", "文件类型不支持，只接受 .xlsx 或 .xls");
+            return "redirect:/teacher/upload";
+        }
+
+        try {
+            ImportService.ImportResult result =
+                    importService.importExcel(file, principal.getName()); // 👈 新增的 Service 方法
+            log.info("Excel 导入完成：成功{}条，失败{}条", result.success(), result.fail());
+            redirect.addFlashAttribute("msg",
+                    String.format("上传成功！成功导入%d条，失败%d条", result.success(), result.fail()));
+        } catch (SecurityException e) {
+            log.error("权限验证失败", e);
+            redirect.addFlashAttribute("error", "上传失败：" + e.getMessage() + "，您只能上传自己负责课程的成绩");
+        } catch (Exception e) {
+            log.error("Excel 上传失败", e);
+            redirect.addFlashAttribute("error", "上传失败：" + e.getMessage());
+        }
+
+        return "redirect:/teacher/upload";
+    }
+
+
 }
